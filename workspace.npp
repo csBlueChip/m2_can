@@ -1,0 +1,66 @@
+<NotepadPlus>
+    <Project name="m2_can">
+        <Folder name="Library">
+            <File name="src\m2_can.h" />
+            <Folder name="Controller">
+                <File name="src\can_bus.h" />
+                <File name="src\can_bus_si.h" />
+                <File name="src\can_bus.cpp" />
+                <File name="src\can_baud.h" />
+                <File name="src\can_baud.cpp" />
+            </Folder>
+            <Folder name="Mailbox">
+                <File name="src\can_mbox.h" />
+                <File name="src\can_mbox_si.h" />
+                <File name="src\can_mbox.cpp" />
+                <File name="src\can_data.h" />
+                <File name="src\can_mbox_data.h" />
+                <File name="src\can_mbox_data_si.h" />
+                <File name="src\can_mbox_data.cpp" />
+            </Folder>
+            <Folder name="RingBuffer">
+                <File name="src\can_rb.h" />
+                <File name="src\can_rb_si.h" />
+                <File name="src\can_rb.cpp" />
+            </Folder>
+            <Folder name="Interrupts">
+                <File name="src\can_intr.h" />
+                <File name="src\can_intr_si.h" />
+                <File name="src\can_intr.cpp" />
+                <File name="src\can_isr.h" />
+                <File name="src\can_isr.cpp" />
+            </Folder>
+            <Folder name="FUDGE">
+                <File name="src\Makefile" />
+                <File name="src\fudge\fudge.h" />
+                <File name="src\fudge\component_can.h" />
+                <File name="src\fudge\sam3x8e.h" />
+            </Folder>
+        </Folder>
+        <Folder name="Examples">
+            <Folder name="Tx">
+                <File name="examples\Tx\Tx.ino" />
+                <File name="examples\Tx\setup.ino" />
+            </Folder>
+            <Folder name="Rx">
+                <File name="examples\Rx\Rx.ino" />
+                <File name="examples\Rx\setup.ino" />
+                <File name="examples\Rx\frame.ino" />
+            </Folder>
+        </Folder>
+        <Folder name="Docs">
+            <File name="docs\readme.txt" />
+            <File name="LICENSE" />
+            <File name="README.md" />
+        </Folder>
+        <Folder name="gitshit">
+            <File name=".gitattributes" />
+            <File name=".gitignore" />
+        </Folder>
+        <Folder name="Arduino">
+            <File name="keywords.txt" />
+            <File name="library.properties" />
+        </Folder>
+        <File name="workspace.npp" />
+    </Project>
+</NotepadPlus>
