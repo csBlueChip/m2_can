@@ -17,7 +17,7 @@ IPAddress      bcastIP  = {192, 168,   0, 255};
 IPAddress      myGW     = {192, 168,   0,   1};
 IPAddress      myDNS    = {  8,   8,   8,   8};
 
-unsigned char  myMAC[6]    = {0xAA, 0xAA, 0xAA, 0xAA, 0xBC, 0x01};
+unsigned char  myMAC[6]    = {0x03, 0xAA, 0xAA, 0xAA, 0xBC, 0x01};
 unsigned char  bcastMAC[6] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
 
 //------------------------------------------------------------------------------ ---------------------------------------
