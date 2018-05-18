@@ -8,20 +8,20 @@
 #include "setup.h"
 
 //------------------------------------------------------------------------------ ---------------------------------------
-#define LONG_CLICK  (500)    // longClick time in milliseconds (1S = 1000mS)
-#define INTERVAL    (10000)  // Output interval in milliseconds (1S = 1000mS)
+#define LONG_CLICK  (500)   // longClick time in milliseconds (1S = 1000mS)
+#define INTERVAL    (1000)  // Output interval in milliseconds (1S = 1000mS)
 
 //------------------------------------------------------------------------------ ---------------------------------------
 // Baud selection : Start with the first one - wrap when you get to the EndOfList
 uint32_t   baud_list[] = {
-  CAN_BAUD_125K, CAN_BAUD_250K, CAN_BAUD_500K, CAN_BAUD_1000K,
+  CAN_BAUD_500K, CAN_BAUD_1000K, CAN_BAUD_125K, CAN_BAUD_250K, 
   CAN_BAUD_EOL
 };
 uint32_t*     pBaud = baud_list;
 
 //------------------------------------------------------------------------------ 
 int           bus   = 0;
-mid_t         se    = MBOX_STD;  // Send STD/EXT packets (2.0a/2.0b)
+mid_t         se    = MBOX_EXT;  // Send STD/EXT packets (2.0a/2.0b)
 
 //------------------------------------------------------------------------------ 
 unsigned int  tick  = 0;         // Timer
@@ -98,29 +98,27 @@ void  loop (void)
   unsigned int  ms    = 0;  // millis() read
 
   // This loop avoids the need to jump in-and-out of main() every iteration
-  for (lpCnt = 0; true; lpCnt++) {
+  for (true;  true;  lpCnt++) {
     
-    // Catch Packets
+    check_buttons();  // All button events trigger a logging event (tick = 0)...
+    
+    // Send Packets
     if (MSR_MRDY(mbox_sr_get(bus,0))) {
       tx++;
       // We send 0 bytes of data ...because we want the smallest packet possible
       mbox_tx(bus,0, 0);
     }
 
-    check_buttons();
-    
     // Display logs (every INTERVAL mS)
     ms = millis();
     if (ms >= tick) {
-      FSAY("@ ");
-      BIGDEC((tick = ms + INTERVAL));
-      FSAY(" : tx=");
-      BIGDEC(tx);        
-      FSAY("   lpCnt=");  
-      BIGDEC(lpCnt);
+      FSAY("@ ");        BIGDEC(ms);
+      FSAY(" : tx=");    BIGDEC(tx);        
+      FSAY("   Free=");  BIGDEC(lpCnt - tx);
       FSAYLN("");      
       if (serialEventRun) serialEventRun();
       tx = lpCnt = 0;
+      tick = millis() + INTERVAL;
     }
 
   } // for (lpCnt
