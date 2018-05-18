@@ -14,12 +14,12 @@ void  help (void)
     "     :Yel1 = Serial Port active (Flash = Waiting)\r\n"
     "     :Yel2 = CAN Initialised\r\n"
     "     :Yel3 = Baud Detected\r\n"
-    "     :Grn  = Mailbox configured (Flash = Error)\r\n"
+    "     :Grn  = Mailbox(es) configured (Flash = Error)\r\n"
     // AnyKey to abort waiting for a serial connection [Can't display - No serial connection yet!]
     "  SW1  = Renegotiate Speed\r\n" 
-    "  SW1+ = Toggle decoding/logging\r\n"
-    "  SW2  = Restart timer\r\n"
-    "  SW2+ = Change CAN bus\r\n"
+    "  SW1+ = Change CAN bus\r\n"
+    "  SW2  = Toggle decoding/logging\r\n"
+    "  SW2+ = Toggle Listen-Only mode (IE. No Frame Ack)\r\n"
   );
 }
 //+============================================================================= =======================================

@@ -17,8 +17,9 @@ unsigned int  tick = 0;      // Logging timer
 
 //------------------------------------------------------------------------------ ---------------------------------------
 #define LONG_CLICK   (500)   // longClick time in milliseconds (1S = 1000mS)
-bool    logging    = true;   // Logging control [SW2+]
-int     bus        = 0;      // Bus number      [SW1+]
+bool    logging    = false;  // Logging control    [SW2]
+bool    listenOnly = false;  // ListenOnly control [SW2+]
+int     bus        = 0;      // Bus number         [SW1+]
 
 //+============================================================================= =======================================
 void  heartbeat (m2led_t led)
@@ -66,7 +67,7 @@ void check_buttons (void)
         can_run(bus);  // Reset the CAN bus
         
       } else {  // Long click
-        FSAYLN("\r\n+ [SW2+] Change CAN bus") ;
+        FSAYLN("\r\n+ [SW1+] Change CAN bus") ;
         bus = (bus == 1) ? 0 : 1 ;
         can_run(bus);  // Reset the CAN bus
       }
@@ -88,12 +89,13 @@ void check_buttons (void)
     
     case ONUP :
       if (millis() < ms2) {  // Short click
-        FSAYLN("\r\n+ [SW2] Restart timer") ;
+        FSAY("\r\n+ [SW2] Toggle logging: ") ;
+        SAYLN((logging = !logging) ? F("ON") : F("OFF"));
         
       } else {  // Long click
-        FSAY("\r\n+ [SW1+] Toggle logging: ") ;
-        if ( (logging = !logging) )  {  FSAYLN("ON");   can_listen_off(bus);  }  // Ack received packets
-        else                         {  FSAYLN("OFF");  can_listen_on(bus);   }  // Listen-only mode
+        FSAY("\r\n+ [SW2+] Toggle Listen-Only: ") ;
+        if ( (listenOnly = !listenOnly) )  {  FSAYLN("ON");   can_listen_on(bus);   }  // Listen-only mode
+        else                               {  FSAYLN("OFF");  can_listen_off(bus);  }  // Ack received packets
       }
       tick = 0;  // restart timer
       // Fallthrough : ISUP
@@ -110,10 +112,10 @@ void check_buttons (void)
 //+============================================================================= =======================================
 void  can_run (int n)
 {
-  bus = n;                             // Set the bus
-  if (!can_setup())  return;           // Setup the CAN controller
-  mbox_setup();                        // Configure Mailboxes
-  if (logging)  can_listen_off(bus) ;  // Disable listen-only mode
+  bus = n;                                 // Set the bus
+  if (!can_setup())  return;               // Setup the CAN controller
+  mbox_setup();                            // Configure Mailboxes
+  if (!listenOnly)  can_listen_off(bus) ;  // Disable listen-only mode
 }  
 
 //+============================================================================= =======================================
@@ -129,6 +131,9 @@ void setup (void)
 
   FSAY("# Logging is : ") ;
   SAYLN(logging ? F("ON") : F("OFF"));
+  
+  FSAY("# Listen-Only is : ") ;
+  SAYLN(listenOnly ? F("ON") : F("OFF"));
 }
 
 //+============================================================================= =======================================

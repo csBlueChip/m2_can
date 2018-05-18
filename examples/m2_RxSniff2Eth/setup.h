@@ -5,7 +5,7 @@
 #define APPNAME "m2_RxSniff2Eth"
 
 #define VER_MAJ 1
-#define VER_MIN 0
+#define VER_MIN 1
 #define VER_SUB 0
 
 #define STR(s)  #s
