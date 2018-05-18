@@ -55,25 +55,9 @@ bool  can_setup (void)
   // Start the CAN busses running at suitable baud rates
   fail = false; 
   
-  FSAY("# Try CAN");
-  SAY(bus);
-  FSAY(" = Autobaud : ");
-  
-# define METHOD 1
-# if METHOD == 1  
-    if ( !(baud = can_baud_set(bus, CAN_BAUD_AUTO)) )  {  FSAYLN("*FAIL*");  fail = true;  }
-
-# elif METHOD == 2
-    if ( !(baud = can_baud_auto(bus, NULL))         )  {  FSAYLN("*FAIL*");  fail = true;  }
-
-# elif METHOD == 3
-    static const  uint32_t  baudList[] = { CAN_BAUD_250K, CAN_BAUD_500K,  CAN_BAUD_1000K, CAN_BAUD_EOL };
-    if ( !(baud = can_baud_auto(bus, baudList))     )  {  FSAYLN("*FAIL*");  fail = true;  }
-
-# endif
-# undef METHOD
-
-  else                                                 {  BIGDEC(baud);  SAYLN();  }
+  FSAY("# Try CAN");  SAY(bus);  FSAY(" = Autobaud : ");
+  if ( !(baud = can_baud_set(bus, CAN_BAUD_AUTO)) )  {  FSAYLN("*FAIL*");  fail = true;  }
+  else                                               {  BIGDEC(baud);  SAYLN();  }
   
   if (fail)  return led_off(LED_YEL3), false ;
   else       return led_on(LED_YEL3),  true ;
