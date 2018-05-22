@@ -17,8 +17,8 @@ void  prepPkt (int bus,  int mbox, canEth_t* canEth)
     return;
   }
 
-  canEth->dev = CPKT_VALID
-              | ((frame.dir == CDIR_TX) ? CPKT_TX : CPKT_RX)
+  canEth->dev = ((frame.dir == CDIR_TX) ? CPKT_TX : CPKT_RX)
+              | (listenOnly ? CPKT_NOACK : CPKT_ACK)  //! This is the Rx condition - need to add Tx conditition      AROOOGAHHHHH <--- *****
               | (bus << CPKT_BUS_SHIFT) 
               | (mbox << CPKT_MBOX_SHIFT);
   canEth->ts  = 0;

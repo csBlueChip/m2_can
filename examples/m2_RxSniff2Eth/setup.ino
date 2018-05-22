@@ -76,9 +76,14 @@ bool  can_setup (void)
 //   mbox_mode_set(bus,0, 0x00000000,0x00000000,MBOX_STD, MBOX_RX);
 //   mbox_mode_set(bus,1, 0x00000000,0x00000000,MBOX_EXT, MBOX_RX); 
 // 
-// There is no difference between these two mailboxes! 
-// As SAM (demonstrably) does NOT check the actual IDE bit when seelcting a mailbox!
-// ...and ALL packets end up in mailbox 0 (because 0 < 1)
+// LIE: There is no difference between these two mailboxes! 
+//      As SAM (demonstrably) does NOT check the actual IDE bit when seelcting a mailbox!
+//      ...and ALL packets end up in mailbox 0 (because 0 < 1)
+//
+// It seems that STD mailboxes will collect EXT packets
+// ...but NOT the other way around!
+// ...This DOES actually make sense if you think about how packets get masked
+// ...It's still (imho) a bug in the SAM though
 //
 void  mbox_setup (void)
 {
@@ -86,7 +91,7 @@ void  mbox_setup (void)
 
   for (int mbox = 0;  mbox < MBOX_USED;  mbox++) {
     FSAY("# mbox[");  SAY(bus);  FSAY(",");  SAY(mbox);  FSAY("]");
-    if ( !mbox_mode_set(bus,mbox, 0x00000000,0x00000000,MBOX_EXT, MBOX_RX) ) {
+    if ( !mbox_mode_set(bus,mbox, 0x00000000,0x00000000,MBOX_STD, MBOX_RX) ) {
       FSAYLN(" - *FAIL*");
       fail++;
     } else {

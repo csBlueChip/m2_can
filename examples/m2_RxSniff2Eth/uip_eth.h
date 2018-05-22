@@ -27,15 +27,15 @@ typedef
   union canEth {
     uint8_t  pkt[];
     struct {
+      uint8_t   dev;        // Device [tlbb'bmmm = tx:lcl:bus:mbox] or [rabb'bmmm = rx:ack:bus:mbox]
       uint32_t  ts;         // timestamp [undefined format]
       uint32_t  aid;        // Arbitration ID & 0x1FFFFFFF ...2^29 set for EXT packet
       uint32_t  fid;        // Family ID & 0x1FFFFFFF
+      uint8_t   dlc;        // Data Length Count & 0x07 ...2^7 set for RTR packet
       union {
         uint8_t   data[8];  // Always 8 byes, only 'dlc' bytes are used  // fixed frame length!
         uint64_t  md;       // Might be useful for htonll()
       };
-      uint8_t   dlc;        // Data Length Count & 0x07 ...2^7 set for RTR packet
-      uint8_t   dev;        // Device 
     } __attribute__ ((packed)) ;
   }
 canEth_t;
@@ -43,22 +43,37 @@ canEth_t;
 // AID
 #define CPKT_AID_MASK             ((1 << 29) - 1)
 
+#define CPKT_EXT                  (1u << 29)
+#define CPKT_STD                  (0u << 29)
+#define CPKT_EXT_MASK             (CPKT_EXT)
+#define CPKT_EXT_SET(cpkt)        (cpkt.mid |=  CPKT_EXT_MASK)
+#define CPKT_EXT_CLR(cpkt)        (cpkt.mid &= ~CPKT_EXT_MASK)
+#define CPKT_EXT_GET(cpkt)        (cpkt.mid &   CPKT_EXT_MASK != 0)
+
 // DLC
-#define CPKT_DLC_MASK             (7u)
+#define CPKT_DLC_MASK             (0xFu)
 #define CPKT_RTR                  (1u << 7)
 #define CPKT_DATA                 (0u << 7)
+#define CPKT_RTR_MASK             (CPKT_RTR)
 #define CPKT_RTR_SET(cpkt)        (cpkt.dlc |=  CPKT_RTR_MASK)
 #define CPKT_RTR_CLR(cpkt)        (cpkt.dlc &= ~CPKT_RTR_MASK)
 #define CPKT_RTR_GET(cpkt)        (cpkt.dlc &   CPKT_RTR_MASK != 0)
 
 // DEV
-#define CPKT_VALID                (1 << 7)
-
-#define CPKT_TX                   (1u << 6)
-#define CPKT_RX                   (0u << 6)
+#define CPKT_TX                   (1u << 7)
+#define CPKT_RX                   (0u << 7)
+#define CPKT_TX_MASK              (CPKT_TX)
 #define CPKT_TX_SET(cpkt)         (cpkt.dev |=  CPKT_TX_MASK)
 #define CPKT_TX_CLR(cpkt)         (cpkt.dev &= ~CPKT_TX_MASK)
 #define CPKT_TX_GET(cpkt)         (cpkt.dev &   CPKT_TX_MASK != 0)
+
+// If Rx (acked, not-acked)
+#define CPKT_ACK                  (1 << 6)
+#define CPKT_NOACK                (0 << 6)
+
+// If Tx (generated/received)
+#define CPKT_GEN                  (1 << 6)
+#define CPKT_RX                   (0 << 6)
 
 #define CPKT_BUS_SHIFT            (3u)
 #define CPKT_BUS_MASK             (7u << CPKT_BUS_SHIFT)
@@ -69,12 +84,6 @@ canEth_t;
 #define CPKT_MBOX_MASK            (7u << CPKT_MBOX_SHIFT)
 #define CPKT_MBOX_SET(cpkt, val)  ((cpkt.dev & ~CPKT_MBOX_MASK) | ((val << CPKT_MBOX_SHIFT) & CPKT_MBOX_MASK))
 #define CPKT_MBOX_GET(cpkt)       ((cpkt.dev & CPKT_MBOX_MASK) >> CPKT_MBOX_SHIFT)
-
-#define CPKT_EXT                  (1u << 29)
-#define CPKT_STD                  (0u << 29)
-#define CPKT_EXT_SET(cpkt)        (cpkt.mid |=  CPKT_EXT_MASK)
-#define CPKT_EXT_CLR(cpkt)        (cpkt.mid &= ~CPKT_EXT_MASK)
-#define CPKT_EXT_GET(cpkt)        (cpkt.mid &   CPKT_EXT_MASK != 0)
 
 //------------------------------------------------------------------------------ 
 #define FPP (2)  // frames per packet
