@@ -73,7 +73,7 @@ canEth_t;
 
 // If Tx (generated/received)
 #define CPKT_GEN                  (1 << 6)
-#define CPKT_RX                   (0 << 6)
+#define CPKT_RXD                  (0 << 6)
 
 #define CPKT_BUS_SHIFT            (3u)
 #define CPKT_BUS_MASK             (7u << CPKT_BUS_SHIFT)
