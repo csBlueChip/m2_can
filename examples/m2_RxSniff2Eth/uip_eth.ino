@@ -24,7 +24,7 @@ void  prepPkt (int bus,  int mbox, canEth_t* canEth)
   canEth->ts  = 0;
   canEth->aid = htonl((frame.ext ? CPKT_EXT : CPKT_STD) | (frame.aid & CPKT_AID_MASK));
   canEth->fid = htonl(frame.fid);
-  canEth->dlc = htonl((frame.rtr ? CPKT_RTR : CPKT_DATA) | (frame.dlc & CPKT_DLC_MASK));
+  canEth->dlc = (frame.rtr ? CPKT_RTR : CPKT_DATA) | (frame.dlc & CPKT_DLC_MASK);
   
   for (md = frame.data.md,  canEth->md = i = 0;  i < frame.dlc;  md >>= 8, i++)
     canEth->data[i] = md & 0xFF;
